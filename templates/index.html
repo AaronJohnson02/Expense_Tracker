@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tracker</title>
+    <style>
+        h2 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .section {
+            padding: 20px;
+            margin: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 25px;
+            box-sizing: border-box;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Financial Tracker</h2>
+    <div class="container">
+        <div class="section">
+            <h3>Log Expense</h3>
+            <p>Log your daily expenses:</p>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            <form method="POST" action="/">
+                <input type="text" name="amount" placeholder="Enter amount" id="expense"><br>
+                <button type="submit" title="Submit" style="height: 30px; width: 60px; border-radius: 40px;">Submit</button>
+            </form>
+            
+            <form method="POST" action="/limiter">
+                <input type="text" name="elimit" placeholder="Enter amount limit" id="limits"><br>
+                <button type="submit" title="Submit" style="height: 30px; width: 60px; border-radius: 40px;">Submit</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>Daily Transactions</h3>
+            <p>List of daily transactions will appear here...</p>
+            <ul>
+                {% for expense in expenses %}
+                    <li>{{ expense }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Daily Overview</h3>
+            <h4>Amount Limit: {{ limit }}</h4>
+            <p>Summary of your daily financial activities...</p>
+            {% if image %}
+                <img src="{{ image }}" alt="Expense Overview" style="max-width: 100%; height: auto;">
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
