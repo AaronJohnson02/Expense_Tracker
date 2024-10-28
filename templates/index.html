@@ -63,9 +63,10 @@
             <h4>Amount Limit: {{ limit }}</h4>
             <p>Summary of your daily financial activities...</p>
             {% if image %}
-                <img src="{{ image }}" alt="Expense Overview" style="max-width: 100%; height: auto;">
+                <img src="{{ url_for('static', filename='display.jpeg') }}" style="max-width: 100%; height: auto;">
             {% endif %}
         </div>
+        
     </div>
 </body>
 </html>

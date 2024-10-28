@@ -9,7 +9,7 @@ app = Flask(__name__)
 expenses_list = []
 total_expenses = 0
 expense_limit = 0
-img_path = "display.jpeg"
+img_path = "static/display.jpeg"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
