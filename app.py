@@ -9,18 +9,20 @@ app = Flask(__name__)
 expenses_list = []
 total_expenses = 0
 expense_limit = 0
+percentage = 0.0
 img_path = "static/display.jpeg"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global expense_limit, total_expenses, expenses_list
+    global expense_limit, total_expenses, expenses_list, percentage
     error_message = ""
 
     if request.method == 'POST':
         amount = request.form.get('amount')
         if amount and amount.replace('.', '', 1).isdigit() and float(amount) >= 0:
             expenses_list.append(float(amount))
-            total_expenses = sum(expenses_list)  
+            total_expenses = sum(expenses_list)
+            percentage = (total_expenses / expense_limit) * 100
             plt.clf()  
             plt.pie([total_expenses, expense_limit], labels=["Total Expenses", "Limit"], autopct='%1.1f%%')
             plt.savefig(img_path)
@@ -28,7 +30,7 @@ def index():
         else:
             error_message = "Please enter a valid non-negative number for the expense."
     
-    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, image=img_path)
+    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, image=img_path, limit_per = percentage)
 
 @app.route('/limiter', methods=['POST'])
 def limit():
@@ -41,7 +43,7 @@ def limit():
     else:
         error_message = "Please enter a valid non-negative number for the limit."
 
-    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, image=img_path)
+    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, image=img_path, limit_per = percentage)
 
 if __name__ == '__main__':
     app.run(debug=True)
