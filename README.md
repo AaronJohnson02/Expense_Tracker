@@ -5,7 +5,7 @@ A basic flask app that tracks your expenses
 ### To-Do List
 - [x] Fix images for Daily
 - [x] Fix excessive spending graph
-- [ ] Fix no-limit
+- [x] Fix limit/no-limit
 - [ ] Fix logic for receiving money
 - [ ] Better Design the Website
 - [ ] Figure out weekly amount
