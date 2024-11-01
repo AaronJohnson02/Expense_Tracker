@@ -60,12 +60,11 @@
 
         <div class="section">
             <h3>Daily Overview</h3>
+            <h4>Total Expense: {{ tex }}</h4>
             <h4>Amount Limit: {{ limit }}</h4>
             <h4>Expense Percentage: {{ limit_per }}</h4>
             <p>Summary of your daily financial activities...</p>
-            {% if image %}
-                <img src="{{ url_for('static', filename='display.jpeg') }}" style="max-width: 100%; height: auto;">
-            {% endif %}
+            <img src="static/display.jpeg" style="height: 400px; width: 400px;">
         </div>
         
     </div>
