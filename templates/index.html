@@ -4,118 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #121212;
-            color: #e0e0e0; 
+            color: #E0E0E0;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
+            padding: 20px;
         }
-        
         h2 {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            color: #ffffff;
+            color: #BB86FC;
         }
-        
-        h3, h4 {
-            color: #bb86fc;
-        }
-        
-
         .container {
             display: flex;
             justify-content: space-between;
-            width: 80%;
-            max-width: 1200px;
-            padding: 30px;
-            gap: 20px;
-            box-sizing: border-box;
-            flex-wrap: wrap;
-        }
-
-        .section {
-            flex: 1;
-            background-color: #1e1e1e; 
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            gap: 20px;
         }
-
-        .section h3 {
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .section ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .section ul li {
-            margin: 10px 0;
-            font-size: 1.1rem;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+        .section {
+            background-color: #1E1E1E;
+            padding: 20px;
             border-radius: 8px;
-            border: 1px solid #444;
-            background-color: #333;
-            color: #e0e0e0;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            flex: 1;
         }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #bb86fc;
-            background-color: #222;
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #BB86FC;
+            background-color: #2C2C2C;
+            color: #E0E0E0;
         }
-
         button {
-            background-color: #6200ee;
-            color: white;
+            background-color: #BB86FC;
+            color: #121212;
             border: none;
-            padding: 12px 30px;
-            border-radius: 40px;
+            padding: 10px 15px;
+            border-radius: 40px; 
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease-in-out;
         }
-
         button:hover {
-            background-color: #3700b3;
+            background-color: #9B59B6; 
         }
-
-        button:active {
-            background-color: #bb86fc;
-        }
-
         .error {
-            color: #ff4444;
+            color: red;
             text-align: center;
-            margin-top: 15px;
         }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px 0;
-            border-radius: 10px;
+        ul {
+            list-style-type: none;
+            padding-left: 0;
         }
-
+        li {
+            background-color: #333333; 
+            margin-bottom: 5px; 
+            padding: 10px; 
+            border-radius: 4px; 
+        }
+        .scrollable-list {
+            max-height: 200px; 
+            overflow-y: auto; 
+        }
     </style>
 </head>
 <body>
@@ -126,15 +79,17 @@
             {% if error %}
                 <div class="error">{{ error }}</div>
             {% endif %}
+            
             <form method="POST" action="/">
-                <input type="text" name="amount" placeholder="Enter amount" id="expense"><br>
+                <input type="text" name="amount" placeholder="Enter amount" id="expense" required><br>
                 <button type="submit" title="Submit">Submit</button>
             </form>
 
             <form method="POST" action="/limiter">
-                <input type="text" name="elimit" placeholder="Enter amount limit" id="limits"><br>
+                <input type="text" name="elimit" placeholder="Enter amount limit" id="limits" required><br>
                 <button type="submit" title="Submit">Set Limit</button>
             </form>
+
             <form method="POST" action="/clear">
                 <button type="submit" title="Clear">Clear</button>
             </form>
@@ -142,22 +97,40 @@
 
         <div class="section">
             <h3>Daily Transactions</h3>
-            <ul>
-                {% for expense in expenses %}
-                    <li>{{ expense }}</li>
-                {% endfor %}
-            </ul>
+            
+            {% if expenses|length > 5 %}
+                <div class="scrollable-list">
+                    <ul>
+                        {% for expense in expenses %}
+                            <li>{{ expense }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <ul>
+                    {% for expense in expenses %}
+                        <li>{{ expense }}</li>
+                    {% endfor %}
+                    {% if expenses|length == 0 %}
+                        <li>No transactions logged.</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            
         </div>
 
         <div class="section">
             <h3>Daily Overview</h3>
             <h4>Total Expense: {{ tex }}</h4>
             <h4>Amount Limit: {{ limit }}</h4>
-            <h4>Expense Percentage: {{ limit_per }}%</h4>
+            <h4>Expense Percentage: {{ limit_per }}</h4>
+            
             {% if limit > 0 %}
-                <img src="static/display.jpeg" alt="Expense Graph">
+                <img src="{{ url_for('static', filename='display.jpeg') }}" style="height: auto; width: auto; max-width: 100%; max-height: 400px;">
             {% endif %}
+            
         </div>
+        
     </div>
 </body>
 </html>
