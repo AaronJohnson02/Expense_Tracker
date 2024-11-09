@@ -22,22 +22,26 @@ def index():
 
     if request.method == 'POST':
         amount = request.form.get('amount')
-        if amount and amount.replace('.', '', 1).isdigit() and float(amount) >= 0:
-            expenses_list.append(round(float(amount),2))
+        if amount and float(amount) >= 0:
+            expenses_list.append(round(float(amount), 2))
             total_expenses = sum(expenses_list)
+            print(f"LIMIT: {expense_limit} AND TOTAL: {total_expenses}")
+
             if expense_limit != 0:
-                percentage = round((total_expenses / expense_limit) * 100 , 2)
+                percentage = round((total_expenses / expense_limit) * 100, 2)
                 plt.clf()
+
+                remaining_limit = expense_limit - total_expenses
+                
                 if total_expenses > expense_limit:
                     plt.pie([expense_limit, 0], labels=["Total Expenses", "Limit"], autopct='%1.1f%%')
                 else:
-                    plt.pie([total_expenses, expense_limit], labels=["Total Expenses", "Limit"], autopct='%1.1f%%')
+                    plt.pie([total_expenses, remaining_limit], labels=["Total Expenses", "Remaining Limit"], autopct='%1.1f%%')
+
                 plt.savefig(img_path)
-                plt.close()  
-        else:
-            error_message = "Please enter a valid non-negative number for the expense."
-    
-    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, limit_per = percentage, tex=total_expenses)
+                plt.close()
+
+    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, limit_per=percentage, tex=total_expenses)
 
 @app.route('/limiter', methods=['POST'])
 def limit():
@@ -50,7 +54,42 @@ def limit():
     else:
         error_message = "Please enter a valid non-negative number for the limit."
 
+    if expense_limit != 0:
+        total_expenses = sum(expenses_list)
+        percentage = round((total_expenses / expense_limit) * 100, 2)
+        print(f"LIMIT: {expense_limit} AND TOTAL: {total_expenses}")
+        
+        plt.clf()
+        
+        remaining_limit = expense_limit - total_expenses
+        
+        if total_expenses > expense_limit:
+            plt.pie([expense_limit, 0], labels=["Total Expenses", "Limit"], autopct='%1.1f%%')
+        else:
+            plt.pie([total_expenses, remaining_limit], labels=["Total Expenses", "Remaining Limit"], autopct='%1.1f%%')
+        
+        plt.savefig(img_path)
+        plt.close()
+
     return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, limit_per = percentage, tex=total_expenses)
+
+@app.route('/clear', methods=['POST'])
+def clear():
+    global expense_limit , expenses_list , percentage , total_expenses, tex
+    expenses_list = []
+    total_expenses = 0
+    expense_limit = 0
+    percentage = 0.0
+    tex = 0
+    error_message = ""
+    if os.path.exists(img_path):
+        os.remove(img_path)
+    return render_template('index.html', expenses=expenses_list, limit=expense_limit, error=error_message, limit_per = percentage, tex=total_expenses)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
