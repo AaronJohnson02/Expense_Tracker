@@ -5,27 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Tracker</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        
         h2 {
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #ffffff;
         }
+        
+        h3, h4 {
+            color: #bb86fc;
+        }
+        
+
         .container {
             display: flex;
             justify-content: space-between;
-            padding: 20px;
-        }
-        .section {
-            padding: 20px;
-            margin: 10px;
-        }
-        textarea {
-            width: 100%;
-            height: 25px;
+            width: 80%;
+            max-width: 1200px;
+            padding: 30px;
+            gap: 20px;
             box-sizing: border-box;
+            flex-wrap: wrap;
         }
-        .error {
-            color: red;
+
+        .section {
+            flex: 1;
+            background-color: #1e1e1e; 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .section h3 {
             text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
         }
+
+        .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .section ul li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #bb86fc;
+            background-color: #222;
+        }
+
+        button {
+            background-color: #6200ee;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+        }
+
+        button:active {
+            background-color: #bb86fc;
+        }
+
+        .error {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -33,24 +123,25 @@
     <div class="container">
         <div class="section">
             <h3>Log Expense</h3>
-            <p>Log your daily expenses:</p>
             {% if error %}
                 <div class="error">{{ error }}</div>
             {% endif %}
             <form method="POST" action="/">
                 <input type="text" name="amount" placeholder="Enter amount" id="expense"><br>
-                <button type="submit" title="Submit" style="height: 30px; width: 60px; border-radius: 40px;">Submit</button>
+                <button type="submit" title="Submit">Submit</button>
             </form>
-            
+
             <form method="POST" action="/limiter">
                 <input type="text" name="elimit" placeholder="Enter amount limit" id="limits"><br>
-                <button type="submit" title="Submit" style="height: 30px; width: 60px; border-radius: 40px;">Submit</button>
+                <button type="submit" title="Submit">Set Limit</button>
+            </form>
+            <form method="POST" action="/clear">
+                <button type="submit" title="Clear">Clear</button>
             </form>
         </div>
 
         <div class="section">
             <h3>Daily Transactions</h3>
-            <p>List of daily transactions will appear here...</p>
             <ul>
                 {% for expense in expenses %}
                     <li>{{ expense }}</li>
@@ -62,11 +153,11 @@
             <h3>Daily Overview</h3>
             <h4>Total Expense: {{ tex }}</h4>
             <h4>Amount Limit: {{ limit }}</h4>
-            <h4>Expense Percentage: {{ limit_per }}</h4>
-            <p>Summary of your daily financial activities...</p>
-            <img src="static/display.jpeg" style="height: 400px; width: 400px;">
+            <h4>Expense Percentage: {{ limit_per }}%</h4>
+            {% if limit > 0 %}
+                <img src="static/display.jpeg" alt="Expense Graph">
+            {% endif %}
         </div>
-        
     </div>
 </body>
 </html>
