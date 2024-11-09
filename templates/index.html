@@ -19,9 +19,9 @@
         }
         .container {
             display: flex;
-            justify-content: space-between;
-            padding: 20px;
+            flex-wrap: wrap;
             gap: 20px;
+            padding: 20px;
         }
         .section {
             background-color: #1E1E1E;
@@ -29,11 +29,21 @@
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #BB86FC;
+        }
+        form {
+            margin-bottom: 20px;
         }
         input[type="text"] {
-            width: calc(100% - 22px);
+            width: 50%;
             padding: 10px;
             margin-top: 10px;
+            margin-bottom: 10px;
             border-radius: 4px;
             border: 1px solid #BB86FC;
             background-color: #2C2C2C;
@@ -44,12 +54,14 @@
             color: #121212;
             border: none;
             padding: 10px 15px;
-            border-radius: 40px; 
+            border-radius: 40px;
             cursor: pointer;
             transition: background-color 0.3s ease-in-out;
+            width: 20%;
+            margin-top: 5px;
         }
         button:hover {
-            background-color: #9B59B6; 
+            background-color: #9B59B6;
         }
         .error {
             color: red;
@@ -60,14 +72,14 @@
             padding-left: 0;
         }
         li {
-            background-color: #333333; 
-            margin-bottom: 5px; 
-            padding: 10px; 
-            border-radius: 4px; 
+            background-color: #333333;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 4px;
         }
         .scrollable-list {
-            max-height: 200px; 
-            overflow-y: auto; 
+            max-height: 200px;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -79,26 +91,21 @@
             {% if error %}
                 <div class="error">{{ error }}</div>
             {% endif %}
-            
             <form method="POST" action="/">
                 <input type="text" name="amount" placeholder="Enter amount" id="expense" required><br>
                 <button type="submit" title="Submit">Submit</button>
             </form>
-
             <form method="POST" action="/limiter">
                 <input type="text" name="elimit" placeholder="Enter amount limit" id="limits" required><br>
                 <button type="submit" title="Submit">Set Limit</button>
             </form>
-
             <form method="POST" action="/clear">
                 <button type="submit" title="Clear">Clear</button>
             </form>
         </div>
-
         <div class="section">
             <h3>Daily Transactions</h3>
-            
-            {% if expenses|length > 5 %}
+            {% if expenses|length > 6 %}
                 <div class="scrollable-list">
                     <ul>
                         {% for expense in expenses %}
@@ -116,21 +123,16 @@
                     {% endif %}
                 </ul>
             {% endif %}
-            
         </div>
-
         <div class="section">
             <h3>Daily Overview</h3>
             <h4>Total Expense: {{ tex }}</h4>
             <h4>Amount Limit: {{ limit }}</h4>
             <h4>Expense Percentage: {{ limit_per }}</h4>
-            
             {% if limit > 0 %}
                 <img src="{{ url_for('static', filename='display.jpeg') }}" style="height: auto; width: auto; max-width: 100%; max-height: 400px;">
             {% endif %}
-            
         </div>
-        
     </div>
 </body>
 </html>
