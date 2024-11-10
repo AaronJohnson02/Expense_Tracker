@@ -19,7 +19,7 @@ def is_valid_number(value):
     """ Check if the input value is a valid non-negative number. """
     try:
         float_value = float(value)
-        return float_value >= 0 
+        return float_value >= 0  
     except ValueError:
         return False
 
@@ -34,7 +34,7 @@ def index():
             if is_valid_number(amount):
                 amount = round(float(amount), 2)
                 expenses_list.append(amount)
-                total_expenses = sum(expenses_list)
+                total_expenses = round(sum(expenses_list),2)
                 print(f"LIMIT: {expense_limit} AND TOTAL: {total_expenses}")
 
                 if expense_limit != 0:
@@ -65,7 +65,7 @@ def limit():
         if is_valid_number(limit_value):
             expense_limit = float(limit_value)
 
-            total_expenses = sum(expenses_list)
+            total_expenses = round(sum(expenses_list),2)
             percentage = round((total_expenses / expense_limit) * 100, 2)
             print(f"LIMIT: {expense_limit} AND TOTAL: {total_expenses}")
             
