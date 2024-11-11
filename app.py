@@ -19,7 +19,7 @@ def is_valid_number(value):
     """ Check if the input value is a valid non-negative number. """
     try:
         float_value = float(value)
-        return float_value >= 0  
+        return float_value > 0  
     except ValueError:
         return False
 
